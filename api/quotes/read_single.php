@@ -13,15 +13,21 @@ $quote = new Quote($db);
 $quote->id = isset($_GET['id']) ? $_GET['id'] : die();
 
 //Get quote 
-$quote->read_single();
+$result = $quote->read_single();
 
-//Create array with object data
-$quote_arr = array(
-    'id' => $quote->id,
-    'quote' => $quote->quote,
-    'author_id' => $quote->author_id,
-    'category_id' => $quote->category_id
-);
+if ($result !== null) {
+    //Create array with object data
+    $quote_arr = array(
+        'id' => $quote->id,
+        'quote' => $quote->quote,
+        'author' => $quote->author,
+        'category' => $quote->category
+    );
 
-//Return JSON
-print_r(json_encode($quote_arr));
+    //Return JSON
+    echo json_encode($quote_arr);
+} else {
+    echo json_encode(array(
+        'message' => 'No Quotes Found'
+    ));
+}

@@ -7,6 +7,8 @@
         public $quote;
         public $author_id;
         public $category_id;
+        public $author;
+        public $category;
 
 
         public function __construct($db){
@@ -14,7 +16,7 @@
         }
     //GET
         public function read() {
-            $query = 'SELECT q.id, q.quote, q.author_id AS author_id, q.category_id AS category_id
+            $query = 'SELECT q.id, q.quote, a.author AS author, c.category AS category
             FROM ' .$this->table.' q
             JOIN authors a ON q.author_id = a.id
             JOIN categories c ON q.category_id = c.id';
@@ -105,13 +107,18 @@
         $stmt->bindParam(':id',$this->id);
         $stmt->execute();
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $this->quote = $row['quote'];
-        $this->author_id = $row['author_id'];
-        $this->category_id= $row['category_id'];
-
+        if ($stmt->rowCount() > 0) {
+          $row = $stmt->fetch(PDO::FETCH_ASSOC);
+          $this->quote = $row['quote'];
+          $this->author_id = $row['author_id'];
+          $this->category_id= $row['category_id'];
+          return $stmt;
+          
+        } else {
+          return null;
         }
+}
+        
     //POST
         public function create() {
             $query = 'INSERT INTO ' . 
@@ -128,7 +135,7 @@
             $this->category_id = htmlspecialchars(strip_tags($this->category_id));
 
             $stmt = $this->conn->prepare($query);
-
+          
             $stmt->bindParam(':quote', $this->quote);
             $stmt->bindParam(':author_id', $this->author_id);
             $stmt->bindParam(':category_id',$this->category_id);

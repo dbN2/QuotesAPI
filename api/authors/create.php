@@ -17,17 +17,19 @@ if(isset($data->author)) {
 $author->author = $data->author;
 } else{
     echo json_encode(
-        array('message' => 'Could not parse JSON data')
+        array('message' => 'Missing Required Parameters')
     );
     return;
 }
 
 //post object
 if($author->create()) {
-    http_response_code(201);
-    echo json_encode(
-        array('message' => 'Author Created')
+     $newAuthor = array(
+        'id' => $db->lastInsertId(),
+        'author' => $author->author
     );
+    echo json_encode($newAuthor);
+    http_response_code(201);
 } else {
     http_response_code(400);
     echo json_encode(

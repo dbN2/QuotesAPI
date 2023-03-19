@@ -31,9 +31,15 @@
             $stmt->bindParam(':id',$this->id);
             $stmt->execute();
 
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $this->category = $row['category'];
+           if ($stmt->rowCount() > 0) {
+             
+              $row = $stmt->fetch(PDO::FETCH_ASSOC);
+              $this->category= $row['category'];
+              return $stmt;
+          
+          } else {
+              return null;
+          }
         }
     //POST
         public function create() {
@@ -106,5 +112,12 @@
             return false;
         
     }
-
+      public function exists($category_id) {
+        $query = "SELECT id FROM " . $this->table . " WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $category_id);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
     }
+
+  }

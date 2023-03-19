@@ -49,14 +49,17 @@ if ($result->rowCount() > 0) {
         $quote_item = array(
             'id' => $id,
             'quote' => $quote,
-            'author_id' => $author_id,
-            'category_id' => $category_id
+            'author' => $author,
+            'category' => $category
         );
         array_push($quote_arr['data'], $quote_item);
     }
     http_response_code(200);
-    echo json_encode($quote_arr);
-} 
+    echo json_encode($quote_arr['data']);
+} else{
+  echo json_encode(array(
+    'message' => 'No Quotes Found'));
+}
 
 
 

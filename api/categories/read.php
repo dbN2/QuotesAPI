@@ -26,7 +26,7 @@ if($result->rowCount() > 0){
         array_push($category_arr['data'], $category_item);
     
     }
-    echo json_encode($category_arr);
+    echo json_encode($category_arr['data']);
 
 } else { 
     echo json_encode(

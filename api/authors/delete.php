@@ -10,14 +10,19 @@ $db = $database->connect();
 //Create author object
 $author = new Author($db);
 
+$data = json_decode(file_get_contents("php://input"));
+
 //check for id
-$author->id = isset($_GET['id']) ? $_GET['id'] : die();
+if(!isset($data->id)){
+    echo json_encode(array('message' => 'Missing Required Parameters')
+    );
+    return;
+}
+
+$author->id = $data->id;
 
 if($author->delete()) {
-    http_response_code(204);
-    echo json_encode(
-        array('message' => 'Successfully deleted')
-    );
+    echo json_encode(array('id'=>$data->id));
 } else {
     http_response_code(404);
     echo json_encode(array('message' => 'Quote with ID ' . $author->id . ' not found.'));

@@ -33,11 +33,17 @@
             $stmt->bindParam(':id',$this->id);
             $stmt->execute();
 
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $this->author = $row['author'];
-            
+            if ($stmt->rowCount() > 0) {
+             
+              $row = $stmt->fetch(PDO::FETCH_ASSOC);
+              $this->author= $row['author'];
+              return $stmt;
+          
+            }else {
+              return null;
+            }
         }
+        
 
     //POST
         public function create() {
@@ -113,5 +119,14 @@
 
         
     }
+
+        public function exists($author_id) {
+        $query = "SELECT id FROM $this->table_name WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $author_id);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
+
 
     }

@@ -13,13 +13,20 @@ $author = new Author($db);
 $author->id = isset($_GET['id']) ? $_GET['id'] : die();
 
 //Get author
-$author->read_single();
+$result = $author->read_single();
 
 //Create array
-$author_arr = array(
-    'id' => $author->id,
-    'author' => $author->author
-);
+if ($result !== null) {
+    //Create array with object data
+    $author_arr = array(
+        'id' => $author->id,
+        'author' => $author->author
+    );
 
-//Return JSON
-print_r(json_encode($author_arr));
+    //Return JSON
+    echo json_encode($author_arr);
+} else {
+    echo json_encode(array(
+        'message' => 'author_id Not Found'
+    ));
+}

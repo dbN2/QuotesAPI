@@ -26,7 +26,8 @@ if($result->rowCount() > 0){
         array_push($author_arr['data'], $author_item);
     
     }
-    echo json_encode($author_arr);
+    echo json_encode($author_arr['data']);
+
 
 } else { 
     echo json_encode(

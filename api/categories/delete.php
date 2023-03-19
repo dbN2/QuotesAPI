@@ -10,15 +10,19 @@ $db = $database->connect();
 //Create author object
 $category = new Category($db);
 
-//check for id
-$category->id = isset($_GET['id']) ? $_GET['id'] : die();
+$data = json_decode(file_get_contents("php://input"));
 
+//check for id
+if(!isset($data->id)){
+    echo json_encode(array('message' => 'Missing Required Parameters')
+    );
+    return;
+}
+
+$category->id = $data->id;
 
 if($category->delete()) {
-    http_response_code(204);
-    echo json_encode(
-        array('message' => 'Successfully deleted')
-    );
+    echo json_encode(array('id'=>$data->id));
 } else {
     http_response_code(404);
     echo json_encode(array('message' => 'Quote with ID ' . $category->id . ' not found.'));
